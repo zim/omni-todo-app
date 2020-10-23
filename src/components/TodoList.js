@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import TodoForm from "./TodoForm"
 import { makeStyles } from '@material-ui/core/styles';
+import Button from "@material-ui/core/Button";
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction';
@@ -86,10 +87,11 @@ function TodoList() {
 
 
     return (
-<React.Fragment>
-            <button type="button" onClick={handleOpen}>
-                react-transition-group
-      </button>
+        <React.Fragment>
+            
+            <Button variant="contained" color="primary" onClick={handleOpen}>
+                Create Todo
+            </Button>
             <Modal
                 aria-labelledby="transition-modal-title"
                 aria-describedby="transition-modal-description"
@@ -137,8 +139,8 @@ function TodoList() {
                 })}
             </List>
 
-</React.Fragment>
-        
+        </React.Fragment>
+
 
     );
 }

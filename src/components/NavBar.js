@@ -1,20 +1,78 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+// import { Link } from 'react-router-dom';
+import { makeStyles } from '@material-ui/core/styles';
+import Typography from "@material-ui/core/Typography";
+import Link from "@material-ui/core/Link";
+import Menu from "@material-ui/core/Menu";
+import MenuList from "@material-ui/core/MenuList";
+import MenuItem from "@material-ui/core/MenuItem";
+import AppBar from '@material-ui/core/AppBar';
+import Toolbar from '@material-ui/core/Toolbar';
+import Button from '@material-ui/core/Button';
+import IconButton from '@material-ui/core/IconButton';
+// import MoreIcon from "@material-ui/icons/MoreVert";
+import MenuIcon from "@material-ui/icons/Menu";
+import theme from '../theme';
 
-// import './NavBar.css';
+const useStyles = makeStyles((classes) => ({
+    root: {
+        flexGrow: 1,
+    },
+    menuButton: {
+        marginRight: 20,
+    },
+    menuItem: {
+        marginRight: theme.spacing(2),
+    },
+    title: {
+        flexGrow: 1,
+        color: "white",
+        // marginRight: 20,
+    },
+}));
 
 const NavBar = () => {
+    const classes = useStyles();
+
+
     return (
-        <div>
-            <h5>NAVBAR</h5>
-            <ul>
-                <li><Link to="/home">Home</Link></li>
-                <li><Link to="/about">About</Link></li>
-                <li><Link to="/todolist">Todo List</Link></li>
-                <li><Link to="/grid">Grid</Link></li>
-            </ul>
-            <hr />
-        </div>
+  
+            <AppBar position="static">
+                <Toolbar>
+                    <IconButton edge="start" className={classes.menuButton} color="inherit" aria-label="menu">
+                        <MenuIcon />
+                    </IconButton>
+
+                <Link href="/home" color="inherit" className={classes.menuItem}>
+                        <Typography variant="h6" className={classes.title}>
+                            Home
+                            </Typography>
+                    </Link>
+                <Link href="/about" color="inherit" className={classes.menuItem}>
+                        <Typography variant="h6" className={classes.title}>
+                            About
+                        </Typography>
+
+                    </Link>
+                <Link href="/todolist" color="inherit" className={classes.menuItem}>
+                        <Typography variant="h6" className={classes.title}>
+
+                            Todo List
+                        </Typography>
+                    </Link>
+                <Link href="/grid" color="inherit" className={classes.menuItem}>
+                        <Typography variant="h6" className={classes.title}>
+                            Grid
+                        </Typography>
+                    </Link>
+
+
+
+
+                   
+                </Toolbar>
+            </AppBar>
+
     );
 };
 

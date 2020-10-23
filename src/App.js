@@ -31,41 +31,20 @@ const useStyles = makeStyles((theme) => ({
 function App() {
 
   const classes = useStyles();
+
   return (
-    <div className="App">
-
-      <Container maxWidth={false} >
-
-      </Container>
+  
 
       <Router>
-        <Container maxWidth="lg">
-
-          <Grid container spacing={3}>
-            <Grid item xs={12}>
-              <Paper className={classes.paper}><NavBar /></Paper>
-            </Grid>
-            
-
-          </Grid>
-
-
-          <Button variant="contained" color="primary">
-            Hello World
-    </Button>
-
-
-
-        </Container>
+        <NavBar />
 
         <Container maxWidth="lg">
           <Routes />
         </Container>
 
-
       </Router>
 
-    </div>
+   
   );
 }
 
