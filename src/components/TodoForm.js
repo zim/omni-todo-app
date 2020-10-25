@@ -1,23 +1,17 @@
 import React, { useState, useEffect } from "react";
+import { API_URL } from '../config';
 import { makeStyles } from '@material-ui/core/styles';
 
-import Button from '@material-ui/core/Button';
-import IconButton from '@material-ui/core/IconButton';
-import Input from '@material-ui/core/Input';
-import FilledInput from '@material-ui/core/FilledInput';
-import OutlinedInput from '@material-ui/core/OutlinedInput';
-import InputLabel from '@material-ui/core/InputLabel';
-import InputAdornment from '@material-ui/core/InputAdornment';
-import FormHelperText from '@material-ui/core/FormHelperText';
-import FormControl from '@material-ui/core/FormControl';
-import TextField from '@material-ui/core/TextField';
-import Visibility from '@material-ui/icons/Visibility';
-import VisibilityOff from '@material-ui/icons/VisibilityOff';
+import { Button, Checkbox, IconButton, Input, FilledInput, OutlinedInput, InputLabel, InputAdornment, FormControl, Fab, FormLabel, FormControlLabel, FormHelperText, FormGroup, TextField } from '@material-ui/core';
 
-import Checkbox from '@material-ui/core/Checkbox';
-import FormGroup from '@material-ui/core/FormGroup';
-import FormControlLabel from '@material-ui/core/FormControlLabel';
-import FormLabel from '@material-ui/core/FormLabel';
+import AddIcon from "@material-ui/icons/Add";
+
+//console.log(API_URL);
+
+const toastColor = {
+    background: '#505050',
+    text: '#fff'
+}
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -52,12 +46,15 @@ const useStyles = makeStyles((theme) => ({
         padding: theme.spacing(2, 4, 3),
         width: '100%',
     },
+    imagecard: {
+        maxWidth: '100px',
+    },
 }));
 
 
 function TodoForm(props) {
 
-    console.log(props);
+    //console.log(props);
     const classes = useStyles();
 
     // const [Id, setId] = useState(null);
@@ -66,20 +63,32 @@ function TodoForm(props) {
     // Create input state
     const [inputTitle, setInputTitle] = useState("");
     const handleChangeTitle = (e) => {
-        console.log(e.target.value);
+        //console.log(e.target.value);
         setInputTitle(e.target.value);
     };
 
     const [inputDescription, setInputDescription] = useState("");
     const handleChangeDescription = (e) => {
-        console.log(e.target.value);
+        //console.log(e.target.value);
         setInputDescription(e.target.value);
     };
 
     const [inputComplete, setInputComplete] = useState(false);
     const handleChangeComplete = (e) => {
-        console.log(e.target.checked);
+        //console.log(e.target.checked);
         setInputComplete(e.target.checked);
+    };
+
+    const [inputUploading, setInputUploading] = useState(false);
+    const handleChangeUploading = (e) => {
+        //console.log(e.target);
+        setInputUploading(true);
+    };
+
+    const [formdata, setFormdata] = useState([]);
+    const handleChangeformdata = (e) => {
+        //console.log(e.target);
+        // setFormdata(true);
     };
 
     // var options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
@@ -89,51 +98,178 @@ function TodoForm(props) {
     // const dateToday = today;
     const dateTodayVersion1 = today.toLocaleDateString("en-UK");
 
-    console.log(dateToday);
-    console.log(dateTodayVersion1);
-
+    //console.log(dateToday);
+    //console.log(dateTodayVersion1);
 
     const [inputDueDate, setInputDueDate] = useState(dateToday);
     
     const handleChangeDueDate = (e) => {
-        console.log(e.target.value);
+        //console.log(e.target.value);
         
         setInputDueDate(e.target.value);
     };
+
+    const onError = id => {
+        //console.log('const onError = id => {');
+    }
+
+    const [inputImages, setInputImages] = useState([]);
+    
+    // const handleChangeImages = (e) => {
+    //     console.log('const handleChangeImagessssssss = (e) => {');
+    //     //console.log(e.target);
+        
+    //     setInputImages(e.target);
+    // };
+
+    const [imagePath, setImagePath] = useState('');
+    
+    const handleChangeImagePath = (e) => {
+        console.log('const handleChangIemagePath = (e) => {');
+        //console.log(e.target);
+        
+        // setInputImsetImagePathages(e.target);
+    };
+
+    const handleChangeImage = (e) => {
+        //console.log('const handleChangeImage = (e) => {');
+        console.dir(e);
+        //console.log(e.target);
+        //console.log(e.target.files);
+
+        const errs = []
+        const files = Array.from(e.target.files);
+        //console.log(files);
+
+        if (files.length > 3) {
+            const msg = 'Only 3 images can be uploaded at a time'
+            return this.toast(msg, 'custom', 2000, toastColor)
+        }
+
+        const formData = new FormData();
+        const types = ['image/png', 'image/jpeg', 'image/gif'];
+        const tmpArray = [];
+        //console.log(typeof formData);
+
+        files.forEach((file, i) => {
+            console.log(file);
+            console.log(typeof file);
+            
+            if (types.every(type => file.type !== type)) {
+                errs.push(`'${file.type}' is not a supported format`)
+            }
+            
+            if (file.size > 150000) {
+                errs.push(`'${file.name}' is too large, please pick a smaller file`)
+            }
+            
+            formData.append(i, file);
+            // formData.append('username', 'Chris');
+            
+            console.dir(formData);
+            console.log(formData.getAll(i));
+
+
+            tmpArray.push(file);
+
+
+            //console.log(tmpArray);
+        })
+
+        setFormdata(tmpArray);
+
+        //console.log(formData);
+
+        
+
+        // if (errs.length) {
+        //     return 
+        // }
+
+
+        fetch(`${API_URL}/image-upload`, {
+            method: 'POST',
+            body: formData
+        })
+            .then(res => {
+                console.log('objec.then(res => {');
+                console.log(res.json);
+
+                if (!res.ok) {
+                    throw res
+                }
+                //console.log(res.json);
+                return res.json()
+            })
+            .then(inputImages => {
+                console.log('.then(inputImages => {');
+                console.log(inputImages);
+                console.log(inputImages[0].secure_url);
+
+                setInputUploading(false);
+                setInputImages(inputImages);
+                setImagePath(inputImages[0].secure_url);
+
+                
+            })
+            .catch(err => {
+                err.json().then(e => {
+                    this.toast(e.message, 'custom', 2000, toastColor);
+                    setInputUploading(true);
+                    // this.setState({ uploading: false })
+                })
+            })
+        
+        // setInputDueDate(e.target.value);
+    };
+
+    const onChangeImage = e => {
+        //console.log('onChangeImage = efdsfsdfsdfsdfsdfgsdg => {');
+        //console.log(e);
+        const errs = []
+        const files = Array.from(e.target.files)
+
+        if (files.length > 3) {
+            const msg = 'Only 3 images can be uploaded at a time'
+            return this.toast(msg, 'custom', 2000, toastColor)
+        }
+
+        const formData = new FormData()
+        const types = ['image/png', 'image/jpeg', 'image/gif']
+    }
 
 
 
 
     useEffect(() => {
-        console.log("useEffect Todo form");
-        console.log(props);
+        //console.log("useEffect Todo form");
+        // //console.log(props);
 
-        console.log(props.editId);
-        console.log(props.todos);
-
-
-
+        // //console.log(props.editId);
+        // //console.log(props.todos);
 
         if (props.editId == null) {
-            console.log('id = nullll');
+            //console.log('id = nullll');
         } else {
-            console.log('id NOT nullll');
-            console.log(props.editId);
+            //console.log('id NOT nullll');
+            // //console.log(props.editId);
 
             const result = props.todos.filter(todo => todo.id === props.editId);
-            console.dir(result);
-            console.log(result[0].id);
+            // console.dir(result);
+            // //console.log(result[0].id);
 
-            console.log(result[0].title);
-            console.log(result[0].description);
-            console.log(result[0].dueDate);
-            console.log(result[0].complete);
+            // //console.log(result[0].title);
+            // //console.log(result[0].description);
+            // //console.log(result[0].dueDate);
+            // //console.log(result[0].complete);
 
             setId(result[0].id);
             setInputTitle(result[0].title);
             setInputDueDate(result[0].dueDate);
             setInputDescription(result[0].description);
             setInputComplete(result[0].complete);
+
+            setImagePath(result[0].imagePath);
 
         }
 
@@ -149,38 +285,41 @@ function TodoForm(props) {
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        console.log("on submitttttt");
+        //console.log("on submitttttt");
         // console.dir(e.target.parentNode[0][0].text);
-        console.log(props.editId);
-        console.log(props.todos);
-        console.log(Id);
-        console.log(inputTitle);
-        console.log(inputDescription);
-        console.log(inputDueDate);
-        console.log(inputComplete);
+        // //console.log(props.editId);
+        // //console.log(props.todos);
+        // //console.log(Id);
+        // //console.log(inputTitle);
+        // //console.log(inputDescription);
+        // //console.log(inputDueDate);
+        // //console.log(inputComplete);
+        console.log(imagePath);
 
 
         if (props.editId == null) {
-            console.log('id = nullll');
+            //console.log('id = nullll');
 
             props.onSubmit({
                 id: Id,
                 title: inputTitle,
                 description: inputDescription,
                 dueDate: inputDueDate,
-                complete: inputComplete
+                complete: inputComplete,
+                imagePath: imagePath
             });
             setInputTitle("");
             setInputDescription("");
             setInputDueDate(null);
             setInputComplete([0]);
+            setImagePath('');
 
             // e.target.parentNode[0][0].selected = true;
 
             props.onClose();
 
         } else {
-            props.editTodo(Id, inputTitle, inputDescription, inputDueDate, inputComplete);
+            props.editTodo(Id, inputTitle, inputDescription, inputDueDate, inputComplete, imagePath);
             props.setEdit();
             props.onClose();
             // props.onClickHide();
@@ -192,14 +331,47 @@ function TodoForm(props) {
     return (
         <React.Fragment >
 
-
-
             <form onSubmit={handleSubmit} noValidate autoComplete="off" className={classes.form}>
 
                 <FormLabel component="legend">Add Todo Form</FormLabel>
-                <p>{Id}</p>
 
                 <FormGroup>
+
+                    <InputLabel htmlFor='icon-button-file'>
+                        <Fab
+                            color="secondary"
+                            size="small"
+                            component="span"
+                            aria-label="add"
+                            variant="extended"
+                        >
+                            <AddIcon /> Upload photo
+        </Fab>
+                    </InputLabel>
+                    <Button
+                        onClick={() => props.removeImage(Id)}
+                        className='delete'
+                    >Remove image</Button>
+
+                    <img
+                        src={imagePath}
+                        alt=''
+                        className={classes.imagecard}
+                    />
+                    
+
+                    <input
+                        style={{ display: "none" }}
+                        color="primary"
+                        accept="image/*"
+                        type="file"
+                        onChange={handleChangeImage}
+                        id="icon-button-file"
+                        margin="normal"
+
+                        variant="outlined"
+                    />
+                    
 
 
                     <InputLabel htmlFor="input-title">Title</InputLabel>
@@ -254,7 +426,13 @@ function TodoForm(props) {
 
                 </FormGroup>
 
+               
             </form>
+
+          
+
+
+            
 
 
 

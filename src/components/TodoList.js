@@ -5,6 +5,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import clsx from 'clsx';
 import { Grid, Container, Box, Button, Modal, Backdrop, Fade, Typography } from '@material-ui/core';
 
+// cloud name dg8ckygz0
 const useStyles = makeStyles((theme) => ({
     root: {
         width: '100%',
@@ -43,7 +44,6 @@ const useStyles = makeStyles((theme) => ({
         margin: '0px!important',
     },
     box: {
-        border: '2px solid red',
         width: '100%',
         // maxWidth: 360,
         backgroundColor: theme.palette.background.paper,
@@ -69,7 +69,7 @@ function TodoList() {
 
     // Set localStorage on initial mount
     useEffect(() => {
-        console.log("use effect one");
+        // console.log("use effect one");
 
         const todos = JSON.parse(localStorage.getItem('todos-omni-dev1'));
         if (todos) {
@@ -80,8 +80,8 @@ function TodoList() {
 
     // update localStorage on data change
     useEffect(() => {
-        console.log("use effect two");
-        console.log(todos.length);
+        // console.log("use effect two");
+        // console.log(todos.length);
 
         if(todos.length==0){
             setTodosEmptyBool(!todosEmptyBool);
@@ -97,14 +97,14 @@ function TodoList() {
     const [open, setOpen] = React.useState(false);
 
     const handleOpen = () => {
-        console.log("const handleOpen = () => {");
+        // console.log("const handleOpen = () => {");
 
-        console.log(editId);
+        // console.log(editId);
         setOpen(true);
     };
 
     const handleClose = () => {
-        console.log("const handleClose = () => {");
+        // console.log("const handleClose = () => {");
         setOpen(false);
         setEdit(null);
     };
@@ -113,7 +113,7 @@ function TodoList() {
     const [openClsx, setOpenClsx] = React.useState(false);
 
     const handleOpenClsx = () => {
-        console.log("const handleOpenClsx = () => {");
+        // console.log("const handleOpenClsx = () => {");
         setOpenClsx(!openClsx);
     };
 
@@ -128,11 +128,11 @@ function TodoList() {
 
 
         if (currentIndex === -1) {
-            console.log("currentIndex === -1");
+            // console.log("currentIndex === -1");
             newChecked.push(value);
             // completeTodo(value);
         } else {
-            console.log("Else currentIndex === -1");
+            // console.log("Else currentIndex === -1");
             // completeTodo(value);
             newChecked.splice(currentIndex, 1);
         }
@@ -143,14 +143,15 @@ function TodoList() {
 
     const handleEditChange = (id, text) => {
         console.log("handle edit channngge");
-        // console.log(id);
+        console.log(id);
+        console.log(text);
         // console.log(text);
 
         setEdit(id);
         setInputValue(text);
         handleOpen();
 
-        console.log(editId);
+        // console.log(editId);
         // setModalShow(true);
     };
 
@@ -159,7 +160,7 @@ function TodoList() {
             return;
         }
 
-        console.log(todos.length);
+        // console.log(todos.length);
         if (todos.length == 0) {
             setTodosEmptyBool(!todosEmptyBool);
         }
@@ -176,7 +177,7 @@ function TodoList() {
     };
 
     const completeTodo = (id) => {
-        console.log("completeTodo");
+        // console.log("completeTodo");
         let updatedTodos = todos.map((todo) => {
             if (todo.id === id) {
                 todo.complete = !todo.complete;
@@ -186,7 +187,7 @@ function TodoList() {
         setTodos(updatedTodos);
     };
 
-    const editTodo = (id, title, description, dueDate, complete) => {
+    const editTodo = (id, title, description, dueDate, complete, imagePath) => {
         console.log("const editTodo = (id, title, description, dueDate, complete) => {");
 
         let editTodos = todos.map((todo) => {
@@ -195,6 +196,7 @@ function TodoList() {
                 todo.description = description;
                 todo.dueDate = dueDate;
                 todo.complete = complete;
+                todo.imagePath = imagePath;
             }
             return todo;
         });
@@ -258,12 +260,6 @@ function TodoList() {
                     <Box className={classes.box}>xs=3</Box>
                 </Grid>
 
-                <Grid item xs={12}>
-                    <Box className={classes.box}>
-                        <img src="http://localhost:3000/1.jpg" alt="logo" />
-                    </Box>
-                </Grid>
-
                 <Grid item xs={12} className={classes.grid}>
                     <Box className={classes.box}>
                         <Typography variant="h1">Todo App</Typography>
@@ -308,6 +304,7 @@ function TodoList() {
                                 description={todo.description}
                                 dueDate={todo.dueDate}
                                 complete={todo.complete}
+                                imagePath={todo.imagePath}
                                 handleToggle={(e) => handleToggle(e)}
                                 checked={checked}
                                 todos={todosSelected}
