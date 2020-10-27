@@ -42,26 +42,20 @@ const NavBar = () => {
   
         <AppBar position="static" className={classes.appBar}>
                 <Toolbar>
-                    <IconButton edge="start" className={classes.menuButton} color="inherit" aria-label="menu">
-                        <MenuIcon />
-                    </IconButton>
+                   
 
-                <Link href="/home" color="inherit" className={classes.menuItem}>
-                        <Typography variant="h6" className={classes.title}>
-                            Home
-                            </Typography>
-                    </Link>
-                <Link href="/about" color="inherit" className={classes.menuItem}>
-                        <Typography variant="h6" className={classes.title}>
-                            About
-                        </Typography>
-
-                    </Link>
                 <Link href="/todolist" color="inherit" className={classes.menuItem}>
                         <Typography variant="h6" className={classes.title}>
 
                             Todo List
                         </Typography>
+                    </Link>
+                
+                <Link href="/about" color="inherit" className={classes.menuItem}>
+                        <Typography variant="h6" className={classes.title}>
+                            About
+                        </Typography>
+
                     </Link>
                 <Link href="/grid" color="inherit" className={classes.menuItem}>
                         <Typography variant="h6" className={classes.title}>

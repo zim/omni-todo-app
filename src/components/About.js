@@ -69,11 +69,14 @@ const About = (props) => {
                 <Box className={classes.box}>
                     <Typography variant="body1" gutterBottom>
                         So I have certainly worked with quite a few libraries and api's onviouaslsy React.js, React hooks for spplicastion state and ui state.
-
+                    </Typography>
+                    <Typography variant="body1" gutterBottom>
                         Then thought I would use React-Router 4 for the paths
-
+                    </Typography>
+                    <Typography variant="body1" gutterBottom>
                         Up to this point I was kind of working ith the React Botstrap libray and implementation to control layout and grid and styles javascript. too. But as wew did mention Material.ui I thought I would use this. Have touced on some concepts and styled compnents a bit bit this is rwall good leafrning curve as there is actually a lot that can be done and that would help to learn top properly utilizt this for a react app ui control. ad more.
-
+                    </Typography>
+                    <Typography variant="body1" gutterBottom>
                         So for instance regarding the form validation task. it did take me a bit longer, because I wanted to try and follow best practices and Material UI docs. In fact this is the case throughout out as it is extensive in its capabilities...
                     </Typography>
                     <Typography variant="body1"gutterBottom>
