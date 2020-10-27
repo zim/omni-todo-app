@@ -1,5 +1,24 @@
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
+## Getting Started
+
+```
+git clone https://github.com/zim/omni-todo-app.git
+cd omni-todo-app.git
+npm i && npm start
+// open new terminal
+cd omni-todo-app/server
+npm i && npm run dev
+```
+
+## Use correct version of NODE.js
+
+```
+nvm use 13.12.
+```
+
+I mention this because I have experienced errors on initial ``npm start`` and ``npm run dev`` commands
+
 ## Available Scripts
 
 In the project directory, you can run:

@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { API_URL } from '../config';
 import TodoForm from "./TodoForm";
 import Todo from './Todo';
 import { makeStyles } from '@material-ui/core/styles';
@@ -11,7 +12,8 @@ const useStyles = makeStyles((theme) => ({
         width: '100%',
         backgroundColor: theme.palette.background.paper,
         minWidth: 600,
-        margin: '0px!important',
+        // margin: '0px!important',
+        border: '2px solid red',
     },
     listItemText: {
         border: '2px solid red',
@@ -54,6 +56,8 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 function TodoList() {
+    console.log('function TodoList() {');
+
     const classes = useStyles();
 
     // useState hooks
@@ -69,42 +73,44 @@ function TodoList() {
 
     // Set localStorage on initial mount
     useEffect(() => {
-        // console.log("use effect one");
+        // // console.log("use effect one");
 
         const todos = JSON.parse(localStorage.getItem('todos-omni-dev1'));
         if (todos) {
             setTodos(todos);
-            // setTodosEmptyBool(false);
+            // setTodosEmptyBool(true);
         }
+        
     }, []);
 
     // update localStorage on data change
     useEffect(() => {
-        // console.log("use effect two");
-        // console.log(todos.length);
-
-        if(todos.length==0){
-            setTodosEmptyBool(!todosEmptyBool);
-        }
+        console.log("use effect two");
+        // // console.log(todos.length);
 
         localStorage.setItem('todos-omni-dev1', JSON.stringify(todos));
-        
+
+        if (todos.length == 0) {
+            console.log('if (todos.length == 0) {');
+            setTodosEmptyBool(false);
+        }  
+
     }, [todos]);
 
-    // console.log(todos);
+    // // console.log(todos);
 
     const [dev, setDev] = React.useState(true);
     const [open, setOpen] = React.useState(false);
 
     const handleOpen = () => {
-        // console.log("const handleOpen = () => {");
+        // // console.log("const handleOpen = () => {");
 
-        // console.log(editId);
+        // // console.log(editId);
         setOpen(true);
     };
 
     const handleClose = () => {
-        // console.log("const handleClose = () => {");
+        // // console.log("const handleClose = () => {");
         setOpen(false);
         setEdit(null);
     };
@@ -113,7 +119,7 @@ function TodoList() {
     const [openClsx, setOpenClsx] = React.useState(false);
 
     const handleOpenClsx = () => {
-        // console.log("const handleOpenClsx = () => {");
+        // // console.log("const handleOpenClsx = () => {");
         setOpenClsx(!openClsx);
     };
 
@@ -122,18 +128,9 @@ function TodoList() {
         const currentIndex = checked.indexOf(value);
         const newChecked = [...checked];
 
-        // console.log(value);
-        // console.log(currentIndex);
-        // console.log(newChecked);
-
-
         if (currentIndex === -1) {
-            // console.log("currentIndex === -1");
             newChecked.push(value);
-            // completeTodo(value);
         } else {
-            // console.log("Else currentIndex === -1");
-            // completeTodo(value);
             newChecked.splice(currentIndex, 1);
         }
 
@@ -142,17 +139,11 @@ function TodoList() {
     };
 
     const handleEditChange = (id, text) => {
-        console.log("handle edit channngge");
-        console.log(id);
-        console.log(text);
-        // console.log(text);
+        // console.log("handle edit channngge");
 
         setEdit(id);
         setInputValue(text);
         handleOpen();
-
-        // console.log(editId);
-        // setModalShow(true);
     };
 
     const addTodo = (todo) => {
@@ -160,14 +151,14 @@ function TodoList() {
             return;
         }
 
-        // console.log(todos.length);
+        // // console.log(todos.length);
         if (todos.length == 0) {
             setTodosEmptyBool(!todosEmptyBool);
         }
 
         const newTodos = [todo, ...todos];
         setTodos(newTodos);
-        
+
     };
 
     const removeTodo = (id) => {
@@ -177,7 +168,7 @@ function TodoList() {
     };
 
     const completeTodo = (id) => {
-        // console.log("completeTodo");
+        // // console.log("completeTodo");
         let updatedTodos = todos.map((todo) => {
             if (todo.id === id) {
                 todo.complete = !todo.complete;
@@ -188,7 +179,7 @@ function TodoList() {
     };
 
     const editTodo = (id, title, description, dueDate, complete, imagePath) => {
-        console.log("const editTodo = (id, title, description, dueDate, complete) => {");
+        // console.log("const editTodo = (id, title, description, dueDate, complete) => {");
 
         let editTodos = todos.map((todo) => {
             if (todo.id === id) {
@@ -207,6 +198,49 @@ function TodoList() {
 
     const { foo, bar, baz } = classes;
     const style = clsx(foo, bar, baz);
+
+    const [errorFetch, setErrorFetch] = useState(false);
+
+    const formData = new FormData();
+
+    fetch(`${API_URL}/image-upload`, {
+        method: 'POST',
+        body: formData
+    })
+        .then(res => {
+            // console.log('objec.then(res => {');
+            // console.log(res.json);
+
+            if (!res.ok) {
+                throw res
+            }
+            //// console.log(res.json);
+            return res.json()
+        })
+        .then(inputImages => {
+            // console.log('.then(inputImages => {');
+            // console.log(inputImages);
+            // console.log(inputImages[0].secure_url);
+
+            // setInputUploading(false);
+            // setInputImages(inputImages);
+            // setImagePath(inputImages[0].secure_url);
+
+
+        })
+        .catch(err => {
+            // console.log('.catch(err => {');
+            console.dir(err.message);
+
+            setErrorFetch(true);
+
+
+            // err.json().then(e => {
+            //     // this.toast(e.message, 'custom', 2000, toastColor);
+            //     // setInputUploading(true);
+            //     // this.setState({ uploading: false })
+            // })
+        })
 
     return (
         <React.Fragment>
@@ -234,63 +268,42 @@ function TodoList() {
 
             <Grid container spacing={3} className={classes.boxContainer}>
 
-                <Grid item xs={12} className={clsx(classes.grid, dev && classes.hide)}>
-                    <Box className={classes.box}>xs=12</Box>
-                </Grid>
-                <Grid item xs={6} className={clsx(dev && classes.hide)}>
-                    <Box className={classes.box}>xs=6</Box>
-                </Grid>
-                <Grid item xs={6} className={clsx(dev && classes.hide)}>
-                    <Box className={classes.box}>xs=6</Box>
-                </Grid>
-
-                <Grid item xs={3}>
-                    <Box className={classes.box}>xs=3</Box>
-                </Grid>
-
-                <Grid item xs={3}>
-                    <Box className={classes.box}>xs=3</Box>
-                </Grid>
-
-                <Grid item xs={3}>
-                    <Box className={classes.box}>xs=3</Box>
-                </Grid>
-
-                <Grid item xs={3}>
-                    <Box className={classes.box}>xs=3</Box>
-                </Grid>
-
                 <Grid item xs={12} className={classes.grid}>
                     <Box className={classes.box}>
-                        <Typography variant="h1">Todo App</Typography>
-                        <Typography variant="body1"><span className={clsx(!todosEmptyBool && classes.hide)}>You do not have any Todo items at the moment.
-                            <br /></span>
-                            Click the 'CREATE TODO' button below to add todo item.</Typography>
+                        <Typography variant="h3">Todo App</Typography>
+                        <Typography variant="h5" className={clsx(!errorFetch && classes.hide)} gutterBottom>For this Todo List App to work you have to install and then run the dev server that can be found in the root of project.
+                        </Typography>
+                        <Typography variant="h5" className={clsx(!errorFetch && classes.hide)} gutterBottom>This is because my solution involved the idea that the easiest way to get started with storing images would be to have a third party host the images and I just use a string url reference to that image to display it in the application. I went down the path of hosting uploaded images to cloudinary.com a free hosting service that I discovered.
+                        </Typography>
+                        <Typography variant="h5" className={clsx(!errorFetch && classes.hide)} gutterBottom>Cloudinary seemed to be a good service that provides a certain amount of storage and transfer on their free plan. So I signed up and got necessary api keys that have been put into a .env file on the dev server.
+                        </Typography>
+                        <Typography variant="h5" className={clsx(!errorFetch && classes.hide)} gutterBottom>
+                        The Instructions have been included in the README.md file that you will have seen on gitHub. But because you are seeing this message it means the dev server has not started succesfully for some reason. So I can help by pointing you back to the README.md file on gitHub which explains the process of getting the dev server running succesfully.
+                        </Typography>
+                        <Typography variant="h5" className={clsx(!errorFetch && classes.hide)} gutterBottom>
+                            I'm sure there is a simpler way to implement the this functionality, that does not involve having to set up a server in this way? But once I had started I did continue with this solution. I hope that is ok.
+                        </Typography>
+                        <Typography variant="h5" className={clsx(!errorFetch && classes.hide)} gutterBottom>Once the dev server is running you will not see this message again and the 'CREATE TODO' button below will activate. Full instructions can be found on the README.md file in github repo.
+                        </Typography>
+                        
+                        <Typography variant="h5" gutterBottom>
+                            Click the 'CREATE TODO' button below to add todo item.
+                        </Typography>
                     </Box>
                 </Grid>
-                
+
 
                 <Grid item xs={12}>
                     <Box className={classes.box}>
 
-                        <Button variant="contained" color="primary" onClick={handleOpen}>
+                        <Button variant="contained" color="primary" onClick={handleOpen} disabled={errorFetch}>
                             Create Todo
                         </Button>
 
-                        <Button variant="contained" color="primary" onClick={handleOpenClsx}>
-                            CLSX experiment
-                        </Button>
-
-                        <Box variant="contained" color="primary" className={clsx(classes.clsxBox1, openClsx && classes.hide)}>
-                            CLSX BOX experiment
-                        </Box>
-
                     </Box>
                 </Grid>
 
                 <Grid item xs={12}>
-
-
 
 
                     {todos.map((todo, index) => {
@@ -323,8 +336,6 @@ function TodoList() {
                 </Grid>
 
             </Grid>
-
-
 
         </React.Fragment>
 

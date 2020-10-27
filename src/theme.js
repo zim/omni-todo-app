@@ -12,6 +12,7 @@ const theme = createMuiTheme({
             main: green[500],
         },
     },
+    
 });
 
 export default theme;

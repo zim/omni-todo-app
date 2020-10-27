@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 
 import { makeStyles } from '@material-ui/core/styles';
 import clsx from 'clsx';
-import { Card, CardContent, CardActions, CardMedia, Typography, Checkbox, Button, Paper } from '@material-ui/core';
+import { Grid, Container, Card, CardContent, CardActions, CardMedia, Typography, Checkbox, Button, Paper } from '@material-ui/core';
 // import { IconButton, FavoriteIcon, ShareIcon } from '@material-ui/icons';
 import IconButton from '@material-ui/core/IconButton';
 import FavoriteIcon from '@material-ui/icons/Favorite';
@@ -46,6 +46,10 @@ const useStyles = makeStyles((theme) => ({
     media: {
         height: 100,
         width: 100,
+    },
+    itemImage: {
+        width: '100%',
+        padding: '22px 16px 0px 16px',
     },
 }));
 
@@ -95,51 +99,56 @@ const Todo =
 
         return (
 
+
             <Card key={id} className={clsx(classes.root, complete ? classes.todoComplete : (dueDate < dateToday) && classes.todoOverdue)}>
 
+                <Grid container spacing={3} className={classes.boxContainer}>
+                    <Grid item xs={12} sm={1} >
+                        <img src={imagePath} title={imagePath} className={classes.itemImage} />
                 
-                <CardContent className={classes.flexit}>
-                    <CardContent>
-                        <CardMedia
-                            className={classes.media}
-                            image={imagePath}
-                            title="Contemplative Reptile"
-                        />
-                    </CardContent>
-                    <CardContent>
-                        <Typography variant="h5" className={title} color="textSecondary" gutterBottom>
-                            {title}
-                        </Typography>
-                        <Typography variant="body1" component="p">
-                            {description}
-                        </Typography>
-                    </CardContent>
+                    </Grid>
+
+                    <Grid item xs={12} sm={8}>
+                        <CardContent>
+                            <Typography variant="h5" className={title} color="textSecondary" gutterBottom>
+                                {title}
+                            </Typography>
+                            <Typography variant="body1" component="p">
+                                {description}
+                            </Typography>
+                        </CardContent>
+                    </Grid>
                     
-                </CardContent>
-                <CardContent className={classes.flexit}>
-                    <Typography color="textSecondary">
-                        Due Date:
+                    <Grid item xs={12} sm={3}>
+                        <CardContent className={classes.flexit}>
+                            <Typography color="textSecondary">
+                                Due Date:
                         <br />
-                        {dueDate}
-                    </Typography>
+                                {dueDate}
+                            </Typography>
 
-                    <Checkbox
-                        edge="end"
-                        onChange={handleToggle(id)}
-                        checked={complete}
-                        className={classes.checkbox}
-                    />
+                            <Checkbox
+                                edge="end"
+                                onChange={handleToggle(id)}
+                                checked={complete}
+                                className={classes.checkbox}
+                            />
 
-                    <IconButton aria-label="add to favorites" onClick={() => removeTodo(id, title)}>
-                        <DeleteIcon />
-                    </IconButton>
-                    <IconButton aria-label="add to favorites" onClick={() => handleEditChange(id, title)}>
-                        <EditIcon />
-                    </IconButton>
+                            <IconButton aria-label="add to favorites" onClick={() => removeTodo(id, title)}>
+                                <DeleteIcon />
+                            </IconButton>
+                            <IconButton aria-label="add to favorites" onClick={() => handleEditChange(id, title)}>
+                                <EditIcon />
+                            </IconButton>
 
-                </CardContent>
+                        </CardContent>
+                    </Grid>
+                    
 
+                </Grid>
             </Card>
+
+
 
         );
     }

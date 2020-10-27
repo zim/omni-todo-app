@@ -29,6 +29,9 @@ const useStyles = makeStyles((classes) => ({
         color: "white",
         // marginRight: 20,
     },
+    appBar: {
+        marginBottom: theme.spacing(2),
+    },
 }));
 
 const NavBar = () => {
@@ -37,7 +40,7 @@ const NavBar = () => {
 
     return (
   
-            <AppBar position="static">
+        <AppBar position="static" className={classes.appBar}>
                 <Toolbar>
                     <IconButton edge="start" className={classes.menuButton} color="inherit" aria-label="menu">
                         <MenuIcon />

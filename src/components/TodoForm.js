@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { API_URL } from '../config';
 import { makeStyles } from '@material-ui/core/styles';
-
-import { Button, Checkbox, IconButton, Input, FilledInput, OutlinedInput, InputLabel, InputAdornment, FormControl, Fab, FormLabel, FormControlLabel, FormHelperText, FormGroup, TextField } from '@material-ui/core';
+import clsx from 'clsx';
+import { Button, Checkbox, IconButton, Input, Box, FilledInput, OutlinedInput, InputLabel, InputAdornment, FormControl, Fab, FormLabel, FormControlLabel, FormHelperText, FormGroup, TextField, Typography } from '@material-ui/core';
 
 import AddIcon from "@material-ui/icons/Add";
 
@@ -48,6 +48,19 @@ const useStyles = makeStyles((theme) => ({
     },
     imagecard: {
         maxWidth: '100px',
+        padding: '0px 24px 0px 0px',
+    },
+    hide: {
+        display: 'none',
+    },
+    inputAddImageLabel: {
+        margin: '0px 24px 0px 0px',
+    },
+    inputAddImageWrapper: {
+        display: 'flex',
+        justifyContent: 'flex-start',
+        alignItems: 'center',
+        padding: '0px 0px 24px 0px',
     },
 }));
 
@@ -102,10 +115,10 @@ function TodoForm(props) {
     //console.log(dateTodayVersion1);
 
     const [inputDueDate, setInputDueDate] = useState(dateToday);
-    
+
     const handleChangeDueDate = (e) => {
         //console.log(e.target.value);
-        
+
         setInputDueDate(e.target.value);
     };
 
@@ -114,32 +127,31 @@ function TodoForm(props) {
     }
 
     const [inputImages, setInputImages] = useState([]);
-    
+
     // const handleChangeImages = (e) => {
     //     console.log('const handleChangeImagessssssss = (e) => {');
     //     //console.log(e.target);
-        
+
     //     setInputImages(e.target);
     // };
 
+    const [errorFetch, setErrorFetch] = useState(false);
+
     const [imagePath, setImagePath] = useState('');
-    
+
     const handleChangeImagePath = (e) => {
         console.log('const handleChangIemagePath = (e) => {');
         //console.log(e.target);
-        
+
         // setInputImsetImagePathages(e.target);
     };
 
     const handleChangeImage = (e) => {
         //console.log('const handleChangeImage = (e) => {');
-        console.dir(e);
-        //console.log(e.target);
-        //console.log(e.target.files);
+        // console.dir(e);
 
         const errs = []
         const files = Array.from(e.target.files);
-        //console.log(files);
 
         if (files.length > 3) {
             const msg = 'Only 3 images can be uploaded at a time'
@@ -149,38 +161,33 @@ function TodoForm(props) {
         const formData = new FormData();
         const types = ['image/png', 'image/jpeg', 'image/gif'];
         const tmpArray = [];
-        //console.log(typeof formData);
 
         files.forEach((file, i) => {
             console.log(file);
             console.log(typeof file);
-            
+
             if (types.every(type => file.type !== type)) {
                 errs.push(`'${file.type}' is not a supported format`)
             }
-            
+
             if (file.size > 150000) {
                 errs.push(`'${file.name}' is too large, please pick a smaller file`)
             }
-            
+
             formData.append(i, file);
-            // formData.append('username', 'Chris');
-            
+
             console.dir(formData);
             console.log(formData.getAll(i));
 
 
             tmpArray.push(file);
-
-
-            //console.log(tmpArray);
         })
 
         setFormdata(tmpArray);
 
         //console.log(formData);
 
-        
+
 
         // if (errs.length) {
         //     return 
@@ -210,17 +217,26 @@ function TodoForm(props) {
                 setInputImages(inputImages);
                 setImagePath(inputImages[0].secure_url);
 
-                
+
             })
             .catch(err => {
-                err.json().then(e => {
-                    this.toast(e.message, 'custom', 2000, toastColor);
-                    setInputUploading(true);
-                    // this.setState({ uploading: false })
-                })
+                console.log('.catch(err => {');
+                console.dir(err.message);
+
+                // setErrorFetch(true);
+
+
+                // err.json().then(e => {
+                //     // this.toast(e.message, 'custom', 2000, toastColor);
+                //     // setInputUploading(true);
+                //     // this.setState({ uploading: false })
+                // })
             })
-        
+
         // setInputDueDate(e.target.value);
+
+
+        console.log(errorFetch);
     };
 
     const onChangeImage = e => {
@@ -249,7 +265,8 @@ function TodoForm(props) {
         // //console.log(props.todos);
 
         if (props.editId == null) {
-            //console.log('id = nullll');
+            console.log('id = nullll');
+
         } else {
             //console.log('id NOT nullll');
             // //console.log(props.editId);
@@ -270,6 +287,7 @@ function TodoForm(props) {
             setInputComplete(result[0].complete);
 
             setImagePath(result[0].imagePath);
+            setImageNew(false);
 
         }
 
@@ -325,66 +343,56 @@ function TodoForm(props) {
             // props.onClickHide();
         }
 
-
     };
+
+    const [imageNew, setImageNew] = useState(true);
+    const handleChangeImageNew = (e) => {
+        console.log(e.target.checked);
+
+        // setImageNew(e.target.checked);
+    };
+
+
+    // const About = (props) => {
+    const UploadImageCtaText = e => {
+        console.log(imageNew);
+
+        if (imageNew) {
+            console.log('if (imageNew) {');
+            return (
+                <span>
+                    Upload Image
+                </span>
+            );
+        } else {
+            console.log('} else {} else {} else {} else { if (imageNew) {');
+            return (
+                <span>
+                    Change Image
+                </span>
+            );
+        }
+
+    }
 
     return (
         <React.Fragment >
 
             <form onSubmit={handleSubmit} noValidate autoComplete="off" className={classes.form}>
 
-                <FormLabel component="legend">Add Todo Form</FormLabel>
+                <Typography variant='h3'>
+                    Add Todo Form
+                </Typography>
 
                 <FormGroup>
-
-                    <InputLabel htmlFor='icon-button-file'>
-                        <Fab
-                            color="secondary"
-                            size="small"
-                            component="span"
-                            aria-label="add"
-                            variant="extended"
-                        >
-                            <AddIcon /> Upload photo
-        </Fab>
-                    </InputLabel>
-                    <Button
-                        onClick={() => props.removeImage(Id)}
-                        className='delete'
-                    >Remove image</Button>
-
-                    <img
-                        src={imagePath}
-                        alt=''
-                        className={classes.imagecard}
-                    />
-                    
-
-                    <input
-                        style={{ display: "none" }}
-                        color="primary"
-                        accept="image/*"
-                        type="file"
-                        onChange={handleChangeImage}
-                        id="icon-button-file"
-                        margin="normal"
-
-                        variant="outlined"
-                    />
-                    
-
 
                     <InputLabel htmlFor="input-title">Title</InputLabel>
                     <TextField
                         id="input-title"
-
-
                         placeholder="Title"
                         fullWidth
                         margin="normal"
-
                         variant="outlined"
-
                         value={inputTitle}
                         onChange={handleChangeTitle}
                     />
@@ -412,29 +420,64 @@ function TodoForm(props) {
                         value={inputDueDate}
                     />
 
-                    
-
                     <FormControlLabel
                         value="complete"
                         control={<Checkbox onChange={handleChangeComplete} color="primary" checked={inputComplete} />}
                         label="Complete"
                         labelPlacement="start"
-
                     />
+
+
+                    <Box className={classes.inputAddImageWrapper}>
+                        <img
+                            src={imagePath}
+                            alt=''
+                            className={clsx(classes.imagecard, imageNew && classes.hide)}
+
+                        />
+
+                        <InputLabel htmlFor='icon-button-file' className={clsx(classes.inputAddImageLabel, false && classes.hide)} >
+                            <Fab
+                                color="secondary"
+                                size="small"
+                                component="span"
+                                aria-label="add"
+                                variant="extended"
+                            >
+
+                                <AddIcon /> <UploadImageCtaText />
+                            </Fab>
+                        </InputLabel>
+                        <Button
+                            variant="contained" color="primary"
+                            onClick={() => props.removeImage(Id)}
+                            className={clsx(classes.delete, true && classes.hide)}
+
+                            className={clsx(imageNew && classes.hide)}
+
+                        >Remove image</Button>
+
+                        <Typography variant="body1" className={clsx(!errorFetch && classes.hide)}>Failed to fetch. This propvbaly means the dev server is not running. See Read me</Typography>
+
+                        <input
+                            style={{ display: "none" }}
+                            color="primary"
+                            accept="image/*"
+                            type="file"
+                            onChange={handleChangeImage}
+                            id="icon-button-file"
+                            margin="normal"
+
+                            variant="outlined"
+                        />
+                    </Box>
 
                     <Button variant="contained" color="primary" onClick={handleSubmit}>add todo</Button>
 
                 </FormGroup>
 
-               
+
             </form>
-
-          
-
-
-            
-
-
 
         </React.Fragment>
 
